@@ -14,17 +14,18 @@ namespace ChessEngineCSharp
             Console.ReadLine();
         }
 
+        static string[] fenBoard;
         private static string PrintFen(string fen)
         {
             StringBuilder sb = new StringBuilder();
             string[] temp = fen.Split();
-            string[] board = temp[0].Split('/');
+            fenBoard = temp[0].Split('/');
             sb.Append("  +-----------------+" + Environment.NewLine);
 
-            for (int i = 0; i < board.Length; i++)
+            for (int i = 0; i < fenBoard.Length; i++)
             {
-                Char[] fig = board[i].ToCharArray();
-                sb.Append((board.Length - i).ToString() + " | ");
+                Char[] fig = fenBoard[i].ToCharArray();
+                sb.Append((fenBoard.Length - i).ToString() + " | ");
                 for (int j = 0; j < fig.Length; j++)
                 {
                     int num;
@@ -53,9 +54,39 @@ namespace ChessEngineCSharp
             return sb.ToString();
         }
 
-        private static ulong FigureToNum(int n)
+        private static ulong[] FigureToNum(string[] fenBoard)
         {
-            return (ulong)Math.Pow(2, n);
+            ulong[] board = new ulong[12];
+            for(int i = 0; i < board.Length; i++)
+                if (SumNumToBoard(fenBoard, out board) == false) continue;
+            
+            return board;
         }
+
+        private static bool SumNumToBoard(string[] fenBoard, out ulong[] board)
+        {
+
+
+            throw new NotImplementedException();
+        }
+
+        enum Piece
+        {
+            whitePawns,
+            whiteKnights,
+            whiteBishops,
+            whiteRooks,
+            whiteQueens,
+            whiteKing,
+
+            blackPawns,
+            blackKnights,
+            blackBishops,
+            blackRooks,
+            blackQueens,
+            blackKing
+        }
+
+
     }
 }
