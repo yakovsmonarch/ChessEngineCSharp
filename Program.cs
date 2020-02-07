@@ -10,48 +10,15 @@ namespace ChessEngineCSharp
     {
         static void Main(string[] args)
         {
-            Console.WriteLine(PrintFen(Console.ReadLine()));
+            string inputFen = "7k/8/8/8/8/8/8/K7";
+            Fen fen = new Fen(inputFen);
+            Board board = new Board(fen.FenToPosition());
+            for(int i = 0; i < 12; i++)
+            {
+                Console.WriteLine("{0}", board.ShowElementBoard(i));
+            }
+
             Console.ReadLine();
-        }
-
-        static string[] fenBoard;
-        private static string PrintFen(string fen)
-        {
-            StringBuilder sb = new StringBuilder();
-            string[] temp = fen.Split();
-            fenBoard = temp[0].Split('/');
-            sb.Append("  +-----------------+" + Environment.NewLine);
-
-            for (int i = 0; i < fenBoard.Length; i++)
-            {
-                Char[] fig = fenBoard[i].ToCharArray();
-                sb.Append((fenBoard.Length - i).ToString() + " | ");
-                for (int j = 0; j < fig.Length; j++)
-                {
-                    int num;
-                    if (int.TryParse(fig[j].ToString(), out num) == true)
-                    {
-                        for (int pointEmpty = 0; pointEmpty < num; pointEmpty++)
-                        {
-                            sb.Append(". ");
-                        }
-                    }
-                    else
-                    {
-                        sb.Append(fig[j] + " ");
-                    }
-
-                }
-                sb.Append("|" + Environment.NewLine);
-            }
-            sb.Append("  +-----------------+" + Environment.NewLine);
-            sb.Append("    ");
-            for (char latChar = 'a'; latChar <= 'h'; latChar++)
-            {
-                sb.Append(latChar + " ");
-            }
-
-            return sb.ToString();
         }
 
         private static ulong[] FigureToNum(string[] fenBoard)
@@ -70,22 +37,7 @@ namespace ChessEngineCSharp
             throw new NotImplementedException();
         }
 
-        enum Piece
-        {
-            whitePawns,
-            whiteKnights,
-            whiteBishops,
-            whiteRooks,
-            whiteQueens,
-            whiteKing,
 
-            blackPawns,
-            blackKnights,
-            blackBishops,
-            blackRooks,
-            blackQueens,
-            blackKing
-        }
 
 
     }
