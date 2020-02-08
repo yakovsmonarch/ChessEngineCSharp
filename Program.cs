@@ -10,7 +10,7 @@ namespace ChessEngineCSharp
     {
         static void Main(string[] args)
         {
-            string inputFen = "7k/8/8/8/8/8/8/K7";
+        	string inputFen = Console.ReadLine();
             Fen fen = new Fen(inputFen);
             Board board = new Board(fen.FenToPosition());
             for(int i = 0; i < 12; i++)
