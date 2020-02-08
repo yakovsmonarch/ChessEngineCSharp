@@ -13,12 +13,14 @@ namespace ChessEngineCSharp
             this.fen = fenText.Trim();
             fenBoard = fen.Split()[0].Split('/');
             FenToPosition(fenBoard);
+            this.FenPosStruct = new FenPos(fenText);
         }
 
         string[] fenBoard;
         string fen = String.Empty;
         string[] position = new string[64];
-
+		
+        public FenPos FenPosStruct;
         public string PrintFen()
         {
             StringBuilder sb = new StringBuilder();
@@ -94,6 +96,86 @@ namespace ChessEngineCSharp
             }
         }
 
+        
+        public struct FenPos
+        {
+        	public FenPos(string fenStr)
+        	{
+        		fenStr = fenStr.Trim();
+        		string[] arrayFen = fenStr.Split();
+        		this.PositionFigure = arrayFen[0];
+        		this.CurrentColorStep = arrayFen[1];
+        		this.PossibilityOfCastling = arrayFen[2];
+        		this.PawnJump = arrayFen[3];
+        		this.Rule50Step = int.Parse(arrayFen[4]);
+        		this.UpcomingMove = int.Parse(arrayFen[5]);
+        	}
+        	
+        	public string PositionFigure;
+        	public string CurrentColorStep;
+        	public string PossibilityOfCastling;
+        	public string PawnJump;
+        	public int Rule50Step;
+        	public int UpcomingMove;
+        	
+        	private string[] FenposToArray(string posFig)
+        	{
+        		int j = 0;
+        		string[] fenLine = posFig.Split('/');
+        		string[] pos64 = new string[64];
+        		for(int i = 0; i < 8; i++)
+        		{
+        			int num;
+        			if(int.TryParse(fenLine[i], out num) == true)
+        			{
+        				for(int n = 0; n < num; n++)
+        				{
+        					pos64[j++] = ".";
+        				}
+        			}
+        			else
+        			{
+        				pos64[j++] = fenLine[i];
+        			}
+        			
+        		}
+        		return pos64;
+        	}
+        	
+        	public string OutFen()
+        	{
+        		string[] _fenArray64 = FenposToArray(PositionFigure);
+        		string fen = String.Empty;
+        		int emptyNum = 0;
+        		for(int i = 0; i < 64; i++)
+        		{
+        			if(i % 8 == 0 && i > 0)
+        			{
+        				if(emptyNum > 0)
+        				{
+        					fen += emptyNum.ToString();
+        					emptyNum = 0;
+        				}
+        				
+        				fen += "/";
+        			}
+        			if(_fenArray64[i] == ".")
+        			{
+        				emptyNum++;
+        				continue;
+        			}
+        			
+        			if(emptyNum > 0)
+        			{
+        				fen += emptyNum.ToString();
+        				emptyNum = 0;
+        			}
+        			
+        			fen += _fenArray64[i];
+        		}
+        		return fen;
+        	}
+        }
         
     }
 }

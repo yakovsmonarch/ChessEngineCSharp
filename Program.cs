@@ -12,11 +12,7 @@ namespace ChessEngineCSharp
         {
         	string inputFen = Console.ReadLine();
             Fen fen = new Fen(inputFen);
-            Board board = new Board(fen.FenToPosition());
-            for(int i = 0; i < 12; i++)
-            {
-                Console.WriteLine("{0}", board.ShowElementBoard(i));
-            }
+            Console.WriteLine( fen.FenPosStruct.OutFen() );
 
             Console.ReadLine();
         }
