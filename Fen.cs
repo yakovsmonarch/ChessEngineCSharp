@@ -120,6 +120,8 @@ namespace ChessEngineCSharp
         	
         	private string[] FenposToArray(string posFig)
         	{
+                posFig = SlashEmpty(posFig);
+
                 string line = posFig.Replace("/", "");
                 string[] pos64 = new string[64];
                 for (int i = 1; i <= 8; i++)
@@ -172,8 +174,8 @@ namespace ChessEngineCSharp
         			fen += _fenArray64[i];
         		}
 
-                fen += " " + CurrentColorStep;
-                fen += " " + PossibilityOfCastling;
+                fen += " " + ValidCurrentColorStep(CurrentColorStep);
+                fen += " " + ValidPossibilityOfCastling(PossibilityOfCastling);
                 fen += " " + PawnJump;
                 fen += " " + Rule50Step;
                 fen += " " + UpcomingMove;
@@ -188,15 +190,39 @@ namespace ChessEngineCSharp
 
             private string ValidPossibilityOfCastling(string castlingFigures)
             {
-                char[] figCastings = castlingFigures.ToCharArray();
-                for(int i = 0; i < figCastings.Length; i++)
-                {
-                    for(int j = 0; j < figCastings.Length; j++)
-                    {
+                if (castlingFigures == "-")
+                    return "-";
 
+                char[] figCastings = castlingFigures.ToCharArray();
+                const string casting = "KQkq";
+                string outCast = string.Empty;
+                for(int i = 0; i < casting.Length; i++)
+                    foreach(char c in figCastings)
+                        if(casting[i] == c)
+                        {
+                            outCast += c.ToString();
+                            break;
+                        }
+
+                return outCast;
+            }
+
+            public string SlashEmpty(string posFig)
+            {
+                string[] arr = posFig.Split('/');
+                for(int i = 0; i < arr.Length; i++)
+                {
+                    if(arr[i] == string.Empty)
+                    {
+                        arr[i] = "8";
                     }
                 }
-                return "";
+                string outPosFig = string.Empty;
+                foreach(string s in arr)
+                {
+                    outPosFig += s + "/";
+                }
+                return outPosFig.Substring(0, outPosFig.Length-1) + " ";
             }
         }
         

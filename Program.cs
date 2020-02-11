@@ -11,6 +11,7 @@ namespace ChessEngineCSharp
         static void Main(string[] args)
         {
         	string inputFen = Console.ReadLine();
+
             Fen fen = new Fen(inputFen);
             Console.WriteLine(fen.FenPosStruct.OutFen());
 
