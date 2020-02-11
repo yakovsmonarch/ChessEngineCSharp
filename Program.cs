@@ -12,7 +12,7 @@ namespace ChessEngineCSharp
         {
         	string inputFen = Console.ReadLine();
             Fen fen = new Fen(inputFen);
-            Console.WriteLine( fen.FenPosStruct.OutFen() );
+            Console.WriteLine(fen.FenPosStruct.OutFen());
 
             Console.ReadLine();
         }

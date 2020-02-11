@@ -120,25 +120,23 @@ namespace ChessEngineCSharp
         	
         	private string[] FenposToArray(string posFig)
         	{
-        		int j = 0;
-        		string[] fenLine = posFig.Split('/');
-        		string[] pos64 = new string[64];
-        		for(int i = 0; i < 8; i++)
-        		{
-        			int num;
-        			if(int.TryParse(fenLine[i], out num) == true)
-        			{
-        				for(int n = 0; n < num; n++)
-        				{
-        					pos64[j++] = ".";
-        				}
-        			}
-        			else
-        			{
-        				pos64[j++] = fenLine[i];
-        			}
-        			
-        		}
+                string line = posFig.Replace("/", "");
+                string[] pos64 = new string[64];
+                for (int i = 1; i <= 8; i++)
+                {
+                    string pointField = string.Empty;
+                    for(int p = 0; p < i; p++)
+                    {
+                        pointField += ".";
+                    }
+                    line = line.Replace(i.ToString(), pointField);
+                }
+                char[] chLine = line.ToCharArray();
+                for(int j = 0; j < 64; j++)
+                {
+                    pos64[j] = chLine[j].ToString();
+                }
+        		
         		return pos64;
         	}
         	
@@ -157,7 +155,7 @@ namespace ChessEngineCSharp
         					emptyNum = 0;
         				}
         				
-        				fen += "/";
+        				fen += @"/";
         			}
         			if(_fenArray64[i] == ".")
         			{
@@ -173,8 +171,33 @@ namespace ChessEngineCSharp
         			
         			fen += _fenArray64[i];
         		}
-        		return fen;
+
+                fen += " " + CurrentColorStep;
+                fen += " " + PossibilityOfCastling;
+                fen += " " + PawnJump;
+                fen += " " + Rule50Step;
+                fen += " " + UpcomingMove;
+
+                return fen;
         	}
+
+            private string ValidCurrentColorStep(string colorStep)
+            {
+                return colorStep.ToLower();
+            }
+
+            private string ValidPossibilityOfCastling(string castlingFigures)
+            {
+                char[] figCastings = castlingFigures.ToCharArray();
+                for(int i = 0; i < figCastings.Length; i++)
+                {
+                    for(int j = 0; j < figCastings.Length; j++)
+                    {
+
+                    }
+                }
+                return "";
+            }
         }
         
     }
