@@ -8,7 +8,98 @@ namespace ChessEngineCSharp
 {
     class Board
     {
-        public Board(string[] position)
+    	Fen fen;
+    	
+    	public Board(Fen fen)
+    	{
+    		this.fen = fen;
+    	}
+    	
+    	private int LetterToNum(char letter)
+    	{
+    		switch(letter)
+    		{
+    			case 'a':
+    				return 0;
+    			case 'b':
+    				return 1;
+    			case 'c':
+    				return 2;
+    			case 'd':
+    				return 3;
+    			case 'e':
+    				return 4;
+    			case 'f':
+    				return 5;
+    			case 'g':
+    				return 6;
+    			case 'h':
+    				return 7;
+    				
+    			default: return -1;
+    		}
+    	}
+
+		private int ConvertToNumField(string step)
+		{
+			int x = LetterToNum(step[0]),
+				y = 8 - int.Parse(step[1].ToString()) ;
+			return y * 8 + x;
+		}
+		
+    	private string ColorStep(string step)
+    	{
+    		string[] position64chars = fen.FenPosStruct.FenposToArray();
+    		int numField = ConvertToNumField(step);
+    		switch (position64chars[numField])
+                {
+                    case "P":
+    					return "w";
+                    case "N":
+                        return "w";
+                    case "B":
+                        return "w";
+                    case "R":
+                        return "w";
+                    case "Q":
+                        return "w";
+                    case "K":
+                        return "w";
+
+                    case "p":
+                        return "b";
+                    case "n":
+                        return "b";
+                    case "b":
+                        return "b";
+                    case "r":
+                        return "b";
+                    case "q":
+                        return "b";
+                    case "k":
+                        return "b";
+                }
+    		return "-";
+    	}
+    	
+    	public string FenChanged(string step)
+    	{
+    		if(ColorStep(step).Trim() == "w")
+    		{
+    			fen.FenPosStruct.CurrentColorStep = "b";
+    		}
+    		else
+    		{
+    			fen.FenPosStruct.CurrentColorStep = "w";
+    		}
+    		
+    		return fen.FenPosStruct.OutFen();
+    		
+    	}
+    	
+    	#region BitBoard * на будущее
+    	/*
+    	public Board(string[] position)
         {
             InitBoard(position);
         }
@@ -83,5 +174,7 @@ namespace ChessEngineCSharp
             blackQueens,
             blackKing
         }
+        */
+    	#endregion
     }
 }

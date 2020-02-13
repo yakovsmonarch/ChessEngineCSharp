@@ -24,8 +24,6 @@ namespace ChessEngineCSharp
         public string PrintFen()
         {
             StringBuilder sb = new StringBuilder();
-            //string[] temp = fen.Split();
-            //fenBoard = temp[0].Split('/');
             sb.Append("  +-----------------+" + Environment.NewLine);
 
             for (int i = 0; i < fenBoard.Length; i++)
@@ -103,6 +101,7 @@ namespace ChessEngineCSharp
         	{
         		fenStr = fenStr.Trim();
         		string[] arrayFen = fenStr.Split();
+        		
         		this.PositionFigure = arrayFen[0];
         		this.CurrentColorStep = arrayFen[1];
         		this.PossibilityOfCastling = arrayFen[2];
@@ -118,11 +117,11 @@ namespace ChessEngineCSharp
         	public int Rule50Step;
         	public int UpcomingMove;
         	
-        	private string[] FenposToArray(string posFig)
+        	public string[] FenposToArray()
         	{
-                posFig = SlashEmpty(posFig);
+                this.PositionFigure = SlashEmpty(this.PositionFigure);
 
-                string line = posFig.Replace("/", "");
+                string line = PositionFigure.Replace("/", "");
                 string[] pos64 = new string[64];
                 for (int i = 1; i <= 8; i++)
                 {
@@ -144,7 +143,7 @@ namespace ChessEngineCSharp
         	
         	public string OutFen()
         	{
-        		string[] _fenArray64 = FenposToArray(PositionFigure);
+        		string[] _fenArray64 = FenposToArray();
         		string fen = String.Empty;
         		int emptyNum = 0;
         		for(int i = 0; i < 64; i++)

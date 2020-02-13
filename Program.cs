@@ -11,27 +11,14 @@ namespace ChessEngineCSharp
         static void Main(string[] args)
         {
         	string inputFen = Console.ReadLine();
-
-            Fen fen = new Fen(inputFen);
-            Console.WriteLine(fen.FenPosStruct.OutFen());
+        	string step = Console.ReadLine();
+        	
+        	Fen fen = new Fen(inputFen);
+        	
+        	Board board = new Board(fen);
+        	Console.WriteLine(board.FenChanged(step));
 
             Console.ReadLine();
-        }
-
-        private static ulong[] FigureToNum(string[] fenBoard)
-        {
-            ulong[] board = new ulong[12];
-            for(int i = 0; i < board.Length; i++)
-                if (SumNumToBoard(fenBoard, out board) == false) continue;
-            
-            return board;
-        }
-
-        private static bool SumNumToBoard(string[] fenBoard, out ulong[] board)
-        {
-
-
-            throw new NotImplementedException();
         }
 
 
