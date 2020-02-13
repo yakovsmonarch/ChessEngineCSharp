@@ -131,7 +131,7 @@ namespace ChessEngineCSharp
                     {
                         pointField += ".";
                     }
-                    line = line.Replace(i.ToString(), pointField);
+                    line = (line.Replace(i.ToString(), pointField)).Trim();
                 }
                 char[] chLine = line.ToCharArray();
                 for(int j = 0; j < 64; j++)
@@ -162,6 +162,10 @@ namespace ChessEngineCSharp
         			if(_fenArray64[i] == ".")
         			{
         				emptyNum++;
+                        if(i == 63)
+                        {
+                            fen += emptyNum.ToString();
+                        }
         				continue;
         			}
         			
@@ -210,8 +214,13 @@ namespace ChessEngineCSharp
             public string SlashEmpty(string posFig)
             {
                 string[] arr = posFig.Split('/');
-                for(int i = 0; i < arr.Length; i++)
+                for(int i = 0; i < 8; i++)
                 {
+                    int n;
+                    if(arr[i].Length == 1 && int.TryParse(arr[i], out n) == false)
+                    {
+                        arr[i] += "7";
+                    }
                     if(arr[i] == string.Empty)
                     {
                         arr[i] = "8";
@@ -222,8 +231,10 @@ namespace ChessEngineCSharp
                 {
                     outPosFig += s + "/";
                 }
-                return outPosFig.Substring(0, outPosFig.Length-1) + " ";
+                //return outPosFig.Substring(0, outPosFig.Length-1) + " ";
+                return outPosFig;
             }
+
         }
         
     }
