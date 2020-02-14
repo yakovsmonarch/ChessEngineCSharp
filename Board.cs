@@ -91,6 +91,7 @@ namespace ChessEngineCSharp
     		else
     		{
     			fen.FenPosStruct.CurrentColorStep = "w";
+                fen.FenPosStruct.UpcomingMove += 1;
     		}
     		
     		return fen.FenPosStruct.OutFen();
