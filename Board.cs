@@ -39,18 +39,32 @@ namespace ChessEngineCSharp
     			default: return -1;
     		}
     	}
+    	
+    	private bool TakingFiece(string startFigure, string stopFigure)
+    	{
+    		
+    		return false;
+    	}
+    	
+    	private string DetectShape(string step, int x, int y)
+    	{
+    		string[] position64chars = fen.FenPosStruct.FenposToArray();
+    		int numField = ConvertToNumField(step, x, y);
+    		
+    		return position64chars[numField];
+    	}
 
-		private int ConvertToNumField(string step)
+		private int ConvertToNumField(string step, int i, int j)
 		{
-			int x = LetterToNum(step[0]),
-				y = 8 - int.Parse(step[1].ToString()) ;
+			int x = LetterToNum(step[i]),
+				y = 8 - int.Parse(step[j].ToString()) ;
 			return y * 8 + x;
 		}
 		
     	private string ColorStep(string step)
     	{
     		string[] position64chars = fen.FenPosStruct.FenposToArray();
-    		int numField = ConvertToNumField(step);
+    		int numField = ConvertToNumField(step, 0, 1);
     		switch (position64chars[numField])
                 {
                     case "P":
@@ -84,7 +98,8 @@ namespace ChessEngineCSharp
     	
     	public string FenChanged(string step)
     	{
-    		if(ColorStep(step).Trim() == "w")
+    		string elemFieldStart = ColorStep(step).Trim();
+    		if(elemFieldStart == "w")
     		{
     			fen.FenPosStruct.CurrentColorStep = "b";
     		}
@@ -93,6 +108,13 @@ namespace ChessEngineCSharp
     			fen.FenPosStruct.CurrentColorStep = "w";
                 fen.FenPosStruct.UpcomingMove += 1;
     		}
+    		
+    		string figStart = DetectShape(step, 0, 1),
+    		figStop = DetectShape(step, 2, 3);
+    		if(figStart == "p" || figStart == "P")
+    			fen.FenPosStruct.Rule50Step = 0;
+    		if(TakingFiece(figStart, figStop) == true)
+    			fen.FenPosStruct.Rule50Step = 0;
     		
     		return fen.FenPosStruct.OutFen();
     		
