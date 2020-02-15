@@ -42,8 +42,10 @@ namespace ChessEngineCSharp
     	
     	private bool TakingFiece(string startFigure, string stopFigure)
     	{
-    		
-    		return false;
+            if (stopFigure == ".") 
+                return false;
+
+    		return true;
     	}
     	
     	private string DetectShape(string step, int x, int y)
@@ -113,8 +115,13 @@ namespace ChessEngineCSharp
     		figStop = DetectShape(step, 2, 3);
     		if(figStart == "p" || figStart == "P")
     			fen.FenPosStruct.Rule50Step = 0;
-    		if(TakingFiece(figStart, figStop) == true)
-    			fen.FenPosStruct.Rule50Step = 0;
+            else 
+            {
+                if (TakingFiece(figStart, figStop) == true)
+                    fen.FenPosStruct.Rule50Step = 0;
+                else fen.FenPosStruct.Rule50Step += 1;
+            }
+            
     		
     		return fen.FenPosStruct.OutFen();
     		
