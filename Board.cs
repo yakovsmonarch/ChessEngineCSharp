@@ -97,6 +97,20 @@ namespace ChessEngineCSharp
                 }
     		return "-";
     	}
+
+        private string[] MoveInArray64(string step)
+        {
+            int start = ConvertToNumField(step, 0, 1),
+                stop = ConvertToNumField(step, 2, 3);
+            string[] b = fen.FenPosStruct.FenposToArray();
+            if (b.Length != 64)
+                return null;
+
+            b[stop] = b[start];
+            b[start] = ".";
+
+            return b;
+        }
     	
     	public string FenChanged(string step)
     	{
@@ -113,17 +127,17 @@ namespace ChessEngineCSharp
     		
     		string figStart = DetectShape(step, 0, 1),
     		figStop = DetectShape(step, 2, 3);
-    		if(figStart == "p" || figStart == "P")
-    			fen.FenPosStruct.Rule50Step = 0;
+
+    		if(figStart == "p" || figStart == "P" || TakingFiece(figStart, figStop) == true)
+            {
+                fen.FenPosStruct.Rule50Step = 0;
+            }
             else 
             {
-                if (TakingFiece(figStart, figStop) == true)
-                    fen.FenPosStruct.Rule50Step = 0;
-                else fen.FenPosStruct.Rule50Step += 1;
+                fen.FenPosStruct.Rule50Step += 1;
             }
             
-    		
-    		return fen.FenPosStruct.OutFen();
+    		return fen.FenPosStruct.OutFen(MoveInArray64(step));
     		
     	}
     	

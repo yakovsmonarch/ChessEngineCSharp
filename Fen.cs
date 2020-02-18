@@ -141,41 +141,47 @@ namespace ChessEngineCSharp
         		return pos64;
         	}
         	
-        	public string OutFen()
-        	{
-        		string[] _fenArray64 = FenposToArray();
-        		string fen = String.Empty;
-        		int emptyNum = 0;
-        		for(int i = 0; i < 64; i++)
-        		{
-        			if(i % 8 == 0 && i > 0)
-        			{
-        				if(emptyNum > 0)
-        				{
-        					fen += emptyNum.ToString();
-        					emptyNum = 0;
-        				}
-        				
-        				fen += @"/";
-        			}
-        			if(_fenArray64[i] == ".")
-        			{
-        				emptyNum++;
-                        if(i == 63)
+            private string ArrayToFen(string[] board64)
+            {
+                string[] _fenArray64 = board64;
+                string fen = String.Empty;
+                int emptyNum = 0;
+                for (int i = 0; i < 64; i++)
+                {
+                    if (i % 8 == 0 && i > 0)
+                    {
+                        if (emptyNum > 0)
+                        {
+                            fen += emptyNum.ToString();
+                            emptyNum = 0;
+                        }
+
+                        fen += @"/";
+                    }
+                    if (_fenArray64[i] == ".")
+                    {
+                        emptyNum++;
+                        if (i == 63)
                         {
                             fen += emptyNum.ToString();
                         }
-        				continue;
-        			}
-        			
-        			if(emptyNum > 0)
-        			{
-        				fen += emptyNum.ToString();
-        				emptyNum = 0;
-        			}
-        			
-        			fen += _fenArray64[i];
-        		}
+                        continue;
+                    }
+
+                    if (emptyNum > 0)
+                    {
+                        fen += emptyNum.ToString();
+                        emptyNum = 0;
+                    }
+
+                    fen += _fenArray64[i];
+                }
+                return fen;
+            }
+        	public string OutFen()
+        	{
+                string fen = ArrayToFen(FenposToArray());
+
 
                 fen += " " + ValidCurrentColorStep(CurrentColorStep);
                 fen += " " + ValidPossibilityOfCastling(PossibilityOfCastling);
@@ -186,6 +192,19 @@ namespace ChessEngineCSharp
                 return fen;
         	}
 
+            public string OutFen(string[] board64)
+            {
+                string fen = ArrayToFen(board64);
+
+
+                fen += " " + ValidCurrentColorStep(CurrentColorStep);
+                fen += " " + ValidPossibilityOfCastling(PossibilityOfCastling);
+                fen += " " + PawnJump;
+                fen += " " + Rule50Step;
+                fen += " " + UpcomingMove;
+
+                return fen;
+            }
             private string ValidCurrentColorStep(string colorStep)
             {
                 return colorStep.ToLower();
@@ -210,7 +229,7 @@ namespace ChessEngineCSharp
                 return outCast;
             }
 
-            public string SlashEmpty(string posFig)
+            private string SlashEmpty(string posFig)
             {
                 string[] arr = posFig.Split('/');
                 for(int i = 0; i < 8; i++)
@@ -230,7 +249,6 @@ namespace ChessEngineCSharp
                 {
                     outPosFig += s + "/";
                 }
-                //return outPosFig.Substring(0, outPosFig.Length-1) + " ";
                 return outPosFig;
             }
 
