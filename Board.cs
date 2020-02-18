@@ -109,6 +109,19 @@ namespace ChessEngineCSharp
             b[stop] = b[start];
             b[start] = ".";
 
+            if(b[stop] == "P" || b[stop] == "p")
+            {
+                if(b[stop] == "P" && step[3] == '8')
+                {
+                    b[stop] = step[4].ToString();
+                }
+                else
+                if (b[stop] == "p" && step[3] == '1')
+                {
+                    b[stop] = step[4].ToString();
+                }
+            }
+
             return b;
         }
     	
