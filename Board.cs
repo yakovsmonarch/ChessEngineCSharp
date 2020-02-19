@@ -98,6 +98,28 @@ namespace ChessEngineCSharp
     		return "-";
     	}
 
+        private string[] MovePawn(string[] b, int start, int stop, string step)
+        {
+            b[stop] = b[start];
+            b[start] = ".";
+
+            if (b[stop] == "P")
+            {
+                if(stop < 8 && stop > -1)
+                    b[stop] = step[4].ToString();
+            }
+            else
+            {
+                if (b[stop] == "p" )
+                {
+                    if(stop < 64 && stop > 54)
+                        b[stop] = step[4].ToString();
+                }
+            }
+
+            return b;
+        }
+
         private string[] MoveInArray64(string step)
         {
             int start = ConvertToNumField(step, 0, 1),
@@ -106,20 +128,17 @@ namespace ChessEngineCSharp
             if (b.Length != 64)
                 return null;
 
-            b[stop] = b[start];
-            b[start] = ".";
-
-            if(b[stop] == "P" || b[stop] == "p")
+            if(b[start] != ".")
             {
-                if(b[stop] == "P" && step[3] == '8')
+                if (b[start] == "P" || b[start] == "p")
                 {
-                    b[stop] = step[4].ToString();
+                    b = MovePawn(b, start, stop, step);
                 }
-                else
-                if (b[stop] == "p" && step[3] == '1')
-                {
-                    b[stop] = step[4].ToString();
-                }
+            }
+            else
+            {
+                b[stop] = b[start];
+                b[start] = ".";
             }
 
             return b;
