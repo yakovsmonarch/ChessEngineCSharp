@@ -40,6 +40,30 @@ namespace ChessEngineCSharp
     		}
     	}
     	
+    	private char NumToLetter(int x)
+    	{
+    		switch(x)
+    		{
+    			case 0:
+    				return 'a';
+    			case 1:
+    				return 'b';
+    			case 2:
+    				return 'c';
+    			case 3:
+    				return 'd';
+    			case 4:
+    				return 'e';
+    			case 5:
+    				return 'f';
+    			case 6:
+    				return 'g';
+    			case 7:
+    				return 'h';
+    		}
+    		return '-';
+    	}
+    	
     	private bool TakingFiece(string startFigure, string stopFigure)
     	{
             if (stopFigure == ".") 
@@ -58,6 +82,8 @@ namespace ChessEngineCSharp
 
 		private int ConvertToNumField(string step, int i, int j)
 		{
+			if(step == "-")
+				return -1;
 			int x = LetterToNum(step[i]),
 				y = 8 - int.Parse(step[j].ToString()) ;
 			return y * 8 + x;
@@ -97,6 +123,16 @@ namespace ChessEngineCSharp
                 }
     		return "-";
     	}
+    	
+    	
+    	
+    	private string CoordToStep(int numField)
+    	{
+    		int y = 8 - numField / 8,
+    			x = numField % 8;
+    			
+    		return NumToLetter(x).ToString() + y.ToString();
+    	}
 
         private string[] MovePawn(string[] b, int start, int stop, string step)
         {
@@ -106,14 +142,60 @@ namespace ChessEngineCSharp
             if (b[stop] == "P")
             {
                 if(stop < 8 && stop > -1)
-                    b[stop] = step[4].ToString();
+                {
+                	b[stop] = step[4].ToString();
+                } 
+                else
+                {
+                	string pawnJump = fen.FenPosStruct.PawnJump.Trim();
+                	int fieldJump = ConvertToNumField(pawnJump, 0, 1);
+                	if( pawnJump != "-" && fieldJump == stop && b[fieldJump+8] == "p" )
+                	{
+                		b[fieldJump + 8] = ".";
+                		fen.FenPosStruct.PawnJump = "-";
+                	}
+                	else
+	                {
+	                	if((start - stop) == 16 && (b[stop - 1] == "p" || b[stop + 1] == "p")  )
+	                	{
+	                		fen.FenPosStruct.PawnJump = CoordToStep(stop + 8);
+	                	}
+	                	else
+	                	{
+	                		fen.FenPosStruct.PawnJump = "-";
+	                	}
+                	}
+                }
             }
             else
             {
                 if (b[stop] == "p" )
                 {
                     if(stop < 64 && stop > 54)
-                        b[stop] = step[4].ToString();
+                    {
+                    	b[stop] = step[4].ToString();
+                    }
+					else
+					{
+						string pawnJump = fen.FenPosStruct.PawnJump.Trim();
+						int fieldJump = ConvertToNumField(pawnJump, 0, 1);
+	                	if(pawnJump != "-" && fieldJump == stop && b[fieldJump-8] == "P" )
+	                	{
+	                		b[fieldJump - 8] = ".";
+	                		fen.FenPosStruct.PawnJump = "-";
+	                	}
+	                	else
+	                	{
+	                		if((stop - start) == 16 && (b[stop - 1] == "P" || b[stop + 1] == "P")  )
+	                		{
+	                			fen.FenPosStruct.PawnJump = CoordToStep(stop - 8);
+	                		}
+	                		else
+	                		{
+	                			fen.FenPosStruct.PawnJump = "-";
+	                		}
+	                	}
+					}
                 }
             }
 
