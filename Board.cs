@@ -250,10 +250,62 @@ namespace ChessEngineCSharp
             {
                 fen.FenPosStruct.Rule50Step += 1;
             }
+
             
-    		return fen.FenPosStruct.OutFen(MoveInArray64(step));
+
+            return fen.FenPosStruct.OutFen(MoveInArray64(step));
     		
     	}
+
+        private void CatingChange(string[] b, int start, int stop)
+        {
+            if (fen.FenPosStruct.PossibilityOfCastling == "-") return;
+
+            if (b[start] == "K")
+            {
+                fen.FenPosStruct.PossibilityOfCastling = fen.FenPosStruct.PossibilityOfCastling.Replace(b[start], string.Empty);
+                fen.FenPosStruct.PossibilityOfCastling = fen.FenPosStruct.PossibilityOfCastling.Replace(b[start], string.Empty);
+            }
+            if (b[start] == "k")
+            {
+                fen.FenPosStruct.PossibilityOfCastling = fen.FenPosStruct.PossibilityOfCastling.Replace(b[start], string.Empty);
+                fen.FenPosStruct.PossibilityOfCastling = fen.FenPosStruct.PossibilityOfCastling.Replace(b[start], string.Empty);
+            }
+            if(b[start] == "R")
+            {
+                if(start == 63)
+                {
+                    fen.FenPosStruct.PossibilityOfCastling = fen.FenPosStruct.PossibilityOfCastling.Replace("K", string.Empty);
+                }
+                if(start == 56)
+                {
+                    fen.FenPosStruct.PossibilityOfCastling = fen.FenPosStruct.PossibilityOfCastling.Replace("Q", string.Empty);
+                }
+            }
+            if (b[start] == "r")
+            {
+                if (start == 7)
+                {
+                    fen.FenPosStruct.PossibilityOfCastling = fen.FenPosStruct.PossibilityOfCastling.Replace("k", string.Empty);
+                }
+                if (start == 0)
+                {
+                    fen.FenPosStruct.PossibilityOfCastling = fen.FenPosStruct.PossibilityOfCastling.Replace("q", string.Empty);
+                }
+            }
+            if(b[stop] == "R")
+            {
+                if(stop == 63)
+                {
+                    fen.FenPosStruct.PossibilityOfCastling = fen.FenPosStruct.PossibilityOfCastling.Replace("K", string.Empty);
+                }
+                if (stop == 56)
+                {
+                    fen.FenPosStruct.PossibilityOfCastling = fen.FenPosStruct.PossibilityOfCastling.Replace("Q", string.Empty);
+                }
+            }
+
+        }
     	
     	#region BitBoard * на будущее
     	/*
