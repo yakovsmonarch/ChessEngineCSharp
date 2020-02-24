@@ -201,6 +201,58 @@ namespace ChessEngineCSharp
 
             return b;
         }
+        
+        private string[] MoveKing(string[] b , int start, int stop, string step)
+        {
+        	if(b[start] == "K")
+        	{
+        		if(start != 60 && (stop != 62 && stop != 58))
+        		{
+		            b[stop] = b[start];
+		            b[start] = ".";
+		            return b;
+        		}
+        		
+        		if(start == 60 && stop == 62)
+        		{
+        			b[stop] = b[start];
+        			b[start] = ".";
+        			b[61] = b[63];
+        			b[63] = ".";
+        		}
+        		else
+        		if(start == 60 && stop == 58)
+        		{
+        			b[stop] = b[start];
+        			b[start] = ".";
+        			b[59] = b[56];
+        			b[56] = ".";
+        		}
+        	}
+        	else
+        	if(b[start] == "k")
+        	{
+        		if(start == 4 && stop == 6)
+        		{
+        			b[stop] = b[start];
+        			b[start] = ".";
+        			b[5] = b[7];
+        			b[7] = ".";
+        			return b;
+        		}
+        		else
+        		if(start == 4 && stop == 2)
+        		{
+        			b[stop] = b[start];
+        			b[start] = ".";
+        			b[3] = b[0];
+        			b[0] = ".";
+        			return b;
+        		}
+        	}
+        	
+        	return b;
+        }
 
         private string[] MoveInArray64(string step)
         {
@@ -215,6 +267,10 @@ namespace ChessEngineCSharp
             if (b[start] == "P" || b[start] == "p")
             {
                  b = MovePawn(b, start, stop, step);
+            }
+            if (b[start] == "K" || b[start] == "p")
+            {
+            	MoveKing(b, start, stop, step);
             }
             else
             {
@@ -270,6 +326,12 @@ namespace ChessEngineCSharp
                 fen.FenPosStruct.PossibilityOfCastling = fen.FenPosStruct.PossibilityOfCastling.Replace("k", string.Empty);
                 fen.FenPosStruct.PossibilityOfCastling = fen.FenPosStruct.PossibilityOfCastling.Replace("q", string.Empty);
             }
+            if(fen.FenPosStruct.PossibilityOfCastling == string.Empty)
+            {
+            	fen.FenPosStruct.PossibilityOfCastling = "-";
+            	return;
+            }
+            
             if(b[start] == "R")
             {
                 if(start == 63)
