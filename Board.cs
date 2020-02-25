@@ -206,7 +206,7 @@ namespace ChessEngineCSharp
         {
         	if(b[start] == "K")
         	{
-        		if(start != 60 && (stop != 62 && stop != 58))
+        		if(stop != 62 && stop != 58)
         		{
 		            b[stop] = b[start];
 		            b[start] = ".";
@@ -219,6 +219,7 @@ namespace ChessEngineCSharp
         			b[start] = ".";
         			b[61] = b[63];
         			b[63] = ".";
+        			return b;
         		}
         		else
         		if(start == 60 && stop == 58)
@@ -227,11 +228,19 @@ namespace ChessEngineCSharp
         			b[start] = ".";
         			b[59] = b[56];
         			b[56] = ".";
+        			return b;
         		}
         	}
         	else
         	if(b[start] == "k")
         	{
+        		if(stop != 6 && stop != 2)
+        		{
+		            b[stop] = b[start];
+		            b[start] = ".";
+		            return b;
+        		}
+        		
         		if(start == 4 && stop == 6)
         		{
         			b[stop] = b[start];
@@ -268,7 +277,7 @@ namespace ChessEngineCSharp
             {
                  b = MovePawn(b, start, stop, step);
             }
-            if (b[start] == "K" || b[start] == "p")
+            if (b[start] == "K" || b[start] == "k")
             {
             	MoveKing(b, start, stop, step);
             }
