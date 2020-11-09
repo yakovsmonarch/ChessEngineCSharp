@@ -10,8 +10,6 @@ namespace ChessEngineCSharp
     {
         static void Main(string[] args)
         {
-			Console.WriteLine("Hello chess!");
-			
         	string inputFen = Console.ReadLine();
         	string step = Console.ReadLine();
         	
