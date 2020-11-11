@@ -8,117 +8,35 @@ namespace ChessEngineCSharp
 {
     class Fen
     {
-        public Fen(string fenText)
-        {
-            this.fen = fenText.Trim();
-            fenBoard = fen.Split()[0].Split('/');
-            FenToPosition(fenBoard);
-            this.FenPosStruct = new FenPos(fenText);
-        }
-
-        string[] fenBoard;
-        string fen = String.Empty;
-        string[] position = new string[64];
+        private string[] _fenBoard;
+        private string _fen = String.Empty;
+        private string[] _position = new string[64];
 		
         public FenPos FenPosStruct;
-        public string PrintFen()
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.Append("  +-----------------+" + Environment.NewLine);
-
-            for (int i = 0; i < fenBoard.Length; i++)
-            {
-                Char[] fig = fenBoard[i].ToCharArray();
-                sb.Append((fenBoard.Length - i).ToString() + " | ");
-                for (int j = 0; j < fig.Length; j++)
-                {
-                    int num;
-                    if (int.TryParse(fig[j].ToString(), out num) == true)
-                    {
-                        for (int pointEmpty = 0; pointEmpty < num; pointEmpty++)
-                        {
-                            sb.Append(". ");
-                        }
-                    }
-                    else
-                    {
-                        sb.Append(fig[j] + " ");
-                    }
-
-                }
-                sb.Append("|" + Environment.NewLine);
-            }
-            sb.Append("  +-----------------+" + Environment.NewLine);
-            sb.Append("    ");
-            for (char latChar = 'a'; latChar <= 'h'; latChar++)
-            {
-                sb.Append(latChar + " ");
-            }
-
-            return sb.ToString();
-        }
-
-        public string ShowField(int numField)
-        {
-            if (numField < 0 || numField > 63)
-                return "Error numField...";
-            return position[numField];
-        }
-
-        public string[] FenToPosition()
-        {
-            return this.position;
-        }
-
-        private void FenToPosition(string[] fenPosition)
-        {
-        	Array.Reverse(fenPosition);
-            int j = 0;
-            for (int i = 0; i < 8; i++)
-            {
-                foreach (char c in fenPosition[i])
-                {
-                    int numEmptyField;
-                    if (int.TryParse(c.ToString(), out numEmptyField) == true)
-                    {
-                        for (int emptyFld = 0; emptyFld < numEmptyField; emptyFld++)
-                        {
-                            position[j++] = ".";
-                        }
-                    }
-                    else
-                    {
-                        position[j++] = c.ToString();
-                    }
-                }
-            }
-        }
-
-        
         public struct FenPos
         {
-        	public FenPos(string fenStr)
-        	{
-        		fenStr = fenStr.Trim();
-        		string[] arrayFen = fenStr.Split();
-        		
-        		this.PositionFigure = arrayFen[0];
-        		this.CurrentColorStep = arrayFen[1];
-        		this.PossibilityOfCastling = arrayFen[2];
-        		this.PawnJump = arrayFen[3];
-        		this.Rule50Step = int.Parse(arrayFen[4]);
-        		this.UpcomingMove = int.Parse(arrayFen[5]);
-        	}
-        	
-        	public string PositionFigure;
-        	public string CurrentColorStep;
-        	public string PossibilityOfCastling;
-        	public string PawnJump;
-        	public int Rule50Step;
-        	public int UpcomingMove;
-        	
-        	public string[] FenposToArray()
-        	{
+            public FenPos(string fenStr)
+            {
+                fenStr = fenStr.Trim();
+                string[] arrayFen = fenStr.Split();
+
+                this.PositionFigure = arrayFen[0];
+                this.CurrentColorStep = arrayFen[1];
+                this.PossibilityOfCastling = arrayFen[2];
+                this.PawnJump = arrayFen[3];
+                this.Rule50Step = int.Parse(arrayFen[4]);
+                this.UpcomingMove = int.Parse(arrayFen[5]);
+            }
+
+            public string PositionFigure;
+            public string CurrentColorStep;
+            public string PossibilityOfCastling;
+            public string PawnJump;
+            public int Rule50Step;
+            public int UpcomingMove;
+
+            public string[] FenposToArray()
+            {
                 this.PositionFigure = SlashEmpty(this.PositionFigure);
 
                 string line = PositionFigure.Replace("/", "");
@@ -126,21 +44,21 @@ namespace ChessEngineCSharp
                 for (int i = 1; i <= 8; i++)
                 {
                     string pointField = string.Empty;
-                    for(int p = 0; p < i; p++)
+                    for (int p = 0; p < i; p++)
                     {
                         pointField += ".";
                     }
                     line = (line.Replace(i.ToString(), pointField)).Trim();
                 }
                 char[] chLine = line.ToCharArray();
-                for(int j = 0; j < 64; j++)
+                for (int j = 0; j < 64; j++)
                 {
                     pos64[j] = chLine[j].ToString();
                 }
-        		
-        		return pos64;
-        	}
-        	
+
+                return pos64;
+            }
+
             private string ArrayToFen(string[] board64)
             {
                 string[] _fenArray64 = board64;
@@ -178,8 +96,8 @@ namespace ChessEngineCSharp
                 }
                 return fen;
             }
-        	public string OutFen()
-        	{
+            public string OutFen()
+            {
                 string fen = ArrayToFen(FenposToArray());
 
 
@@ -190,7 +108,7 @@ namespace ChessEngineCSharp
                 fen += " " + UpcomingMove;
 
                 return fen;
-        	}
+            }
 
             public string OutFen(string[] board64)
             {
@@ -218,9 +136,9 @@ namespace ChessEngineCSharp
                 char[] figCastings = castlingFigures.ToCharArray();
                 const string casting = "KQkq";
                 string outCast = string.Empty;
-                for(int i = 0; i < casting.Length; i++)
-                    foreach(char c in figCastings)
-                        if(casting[i] == c)
+                for (int i = 0; i < casting.Length; i++)
+                    foreach (char c in figCastings)
+                        if (casting[i] == c)
                         {
                             outCast += c.ToString();
                             break;
@@ -232,20 +150,20 @@ namespace ChessEngineCSharp
             private string SlashEmpty(string posFig)
             {
                 string[] arr = posFig.Split('/');
-                for(int i = 0; i < 8; i++)
+                for (int i = 0; i < 8; i++)
                 {
                     int n;
-                    if(arr[i].Length == 1 && int.TryParse(arr[i], out n) == false)
+                    if (arr[i].Length == 1 && int.TryParse(arr[i], out n) == false)
                     {
                         arr[i] += "7";
                     }
-                    if(arr[i] == string.Empty)
+                    if (arr[i] == string.Empty)
                     {
                         arr[i] = "8";
                     }
                 }
                 string outPosFig = string.Empty;
-                foreach(string s in arr)
+                foreach (string s in arr)
                 {
                     outPosFig += s + "/";
                 }
@@ -253,6 +171,89 @@ namespace ChessEngineCSharp
             }
 
         }
+
+        public Fen(string fenText)
+        {
+            _fen = fenText.Trim();
+            _fenBoard = _fen.Split()[0].Split('/');
+            FenToPosition(_fenBoard);
+            FenPosStruct = new FenPos(fenText);
+        }
+
+        public string PrintFen()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("  +-----------------+" + Environment.NewLine);
+
+            for (int i = 0; i < _fenBoard.Length; i++)
+            {
+                Char[] fig = _fenBoard[i].ToCharArray();
+                sb.Append((_fenBoard.Length - i).ToString() + " | ");
+                for (int j = 0; j < fig.Length; j++)
+                {
+                    int num;
+                    if (int.TryParse(fig[j].ToString(), out num) == true)
+                    {
+                        for (int pointEmpty = 0; pointEmpty < num; pointEmpty++)
+                        {
+                            sb.Append(". ");
+                        }
+                    }
+                    else
+                    {
+                        sb.Append(fig[j] + " ");
+                    }
+
+                }
+                sb.Append("|" + Environment.NewLine);
+            }
+            sb.Append("  +-----------------+" + Environment.NewLine);
+            sb.Append("    ");
+            for (char latChar = 'a'; latChar <= 'h'; latChar++)
+            {
+                sb.Append(latChar + " ");
+            }
+
+            return sb.ToString();
+        }
+
+        public string ShowField(int numField)
+        {
+            if (numField < 0 || numField > 63)
+                return "Error numField...";
+            return _position[numField];
+        }
+
+        public string[] FenToPosition()
+        {
+            return this._position;
+        }
+
+        private void FenToPosition(string[] fenPosition)
+        {
+        	Array.Reverse(fenPosition);
+            int j = 0;
+            for (int i = 0; i < 8; i++)
+            {
+                foreach (char c in fenPosition[i])
+                {
+                    int numEmptyField;
+                    if (int.TryParse(c.ToString(), out numEmptyField) == true)
+                    {
+                        for (int emptyFld = 0; emptyFld < numEmptyField; emptyFld++)
+                        {
+                            _position[j++] = ".";
+                        }
+                    }
+                    else
+                    {
+                        _position[j++] = c.ToString();
+                    }
+                }
+            }
+        }
+
+        
         
     }
 }

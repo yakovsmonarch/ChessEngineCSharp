@@ -8,11 +8,11 @@ namespace ChessEngineCSharp
 {
     class Board
     {
-    	Fen fen;
+    	private Fen _fen;
     	
     	public Board(Fen fen)
     	{
-    		this.fen = fen;
+    		_fen = fen;
     	}
     	
     	private int LetterToNum(char letter)
@@ -74,7 +74,7 @@ namespace ChessEngineCSharp
     	
     	private string DetectShape(string step, int x, int y)
     	{
-    		string[] position64chars = fen.FenPosStruct.FenposToArray();
+    		string[] position64chars = _fen.FenPosStruct.FenposToArray();
     		int numField = ConvertToNumField(step, x, y);
     		
     		return position64chars[numField];
@@ -91,7 +91,7 @@ namespace ChessEngineCSharp
 		
     	private string ColorStep(string step)
     	{
-    		string[] position64chars = fen.FenPosStruct.FenposToArray();
+    		string[] position64chars = _fen.FenPosStruct.FenposToArray();
     		int numField = ConvertToNumField(step, 0, 1);
     		switch (position64chars[numField])
                 {
@@ -124,8 +124,6 @@ namespace ChessEngineCSharp
     		return "-";
     	}
     	
-    	
-    	
     	private string CoordToStep(int numField)
     	{
     		int y = 8 - numField / 8,
@@ -147,22 +145,22 @@ namespace ChessEngineCSharp
                 } 
                 else
                 {
-                	string pawnJump = fen.FenPosStruct.PawnJump.Trim();
+                	string pawnJump = _fen.FenPosStruct.PawnJump.Trim();
                 	int fieldJump = ConvertToNumField(pawnJump, 0, 1);
                 	if( pawnJump != "-" && fieldJump == stop && b[fieldJump+8] == "p" )
                 	{
                 		b[fieldJump + 8] = ".";
-                		fen.FenPosStruct.PawnJump = "-";
+                		_fen.FenPosStruct.PawnJump = "-";
                 	}
                 	else
 	                {
 	                	if((start - stop) == 16 && (b[stop - 1] == "p" || b[stop + 1] == "p")  )
 	                	{
-	                		fen.FenPosStruct.PawnJump = CoordToStep(stop + 8);
+	                		_fen.FenPosStruct.PawnJump = CoordToStep(stop + 8);
 	                	}
 	                	else
 	                	{
-	                		fen.FenPosStruct.PawnJump = "-";
+	                		_fen.FenPosStruct.PawnJump = "-";
 	                	}
                 	}
                 }
@@ -177,22 +175,22 @@ namespace ChessEngineCSharp
                     }
 					else
 					{
-						string pawnJump = fen.FenPosStruct.PawnJump.Trim();
+						string pawnJump = _fen.FenPosStruct.PawnJump.Trim();
 						int fieldJump = ConvertToNumField(pawnJump, 0, 1);
 	                	if(pawnJump != "-" && fieldJump == stop && b[fieldJump-8] == "P" )
 	                	{
 	                		b[fieldJump - 8] = ".";
-	                		fen.FenPosStruct.PawnJump = "-";
+	                		_fen.FenPosStruct.PawnJump = "-";
 	                	}
 	                	else
 	                	{
 	                		if((stop - start) == 16 && (b[stop - 1] == "P" || b[stop + 1] == "P")  )
 	                		{
-	                			fen.FenPosStruct.PawnJump = CoordToStep(stop - 8);
+	                			_fen.FenPosStruct.PawnJump = CoordToStep(stop - 8);
 	                		}
 	                		else
 	                		{
-	                			fen.FenPosStruct.PawnJump = "-";
+	                			_fen.FenPosStruct.PawnJump = "-";
 	                		}
 	                	}
 					}
@@ -267,7 +265,7 @@ namespace ChessEngineCSharp
         {
             int start = ConvertToNumField(step, 0, 1),
                 stop = ConvertToNumField(step, 2, 3);
-            string[] b = fen.FenPosStruct.FenposToArray();
+            string[] b = _fen.FenPosStruct.FenposToArray();
             if (b.Length != 64)
                 return null;
             
@@ -289,55 +287,24 @@ namespace ChessEngineCSharp
 
             return b;
         }
-    	
-    	public string FenChanged(string step)
-    	{
-    		string elemFieldStart = ColorStep(step).Trim();
-    		if(elemFieldStart == "w")
-    		{
-    			fen.FenPosStruct.CurrentColorStep = "b";
-    		}
-    		else
-    		{
-    			fen.FenPosStruct.CurrentColorStep = "w";
-                fen.FenPosStruct.UpcomingMove += 1;
-    		}
-    		
-    		string figStart = DetectShape(step, 0, 1),
-    		figStop = DetectShape(step, 2, 3);
-
-    		if(figStart == "p" || figStart == "P" || TakingFiece(figStart, figStop) == true)
-            {
-                fen.FenPosStruct.Rule50Step = 0;
-            }
-            else 
-            {
-                fen.FenPosStruct.Rule50Step += 1;
-            }
-
-            
-
-            return fen.FenPosStruct.OutFen(MoveInArray64(step));
-    		
-    	}
 
         private void CatingChange(string[] b, int start, int stop)
         {
-            if (fen.FenPosStruct.PossibilityOfCastling == "-") return;
+            if (_fen.FenPosStruct.PossibilityOfCastling == "-") return;
 
             if (b[start] == "K")
             {
-                fen.FenPosStruct.PossibilityOfCastling = fen.FenPosStruct.PossibilityOfCastling.Replace("K", string.Empty);
-                fen.FenPosStruct.PossibilityOfCastling = fen.FenPosStruct.PossibilityOfCastling.Replace("Q", string.Empty);
+                _fen.FenPosStruct.PossibilityOfCastling = _fen.FenPosStruct.PossibilityOfCastling.Replace("K", string.Empty);
+                _fen.FenPosStruct.PossibilityOfCastling = _fen.FenPosStruct.PossibilityOfCastling.Replace("Q", string.Empty);
             }
             if (b[start] == "k")
             {
-                fen.FenPosStruct.PossibilityOfCastling = fen.FenPosStruct.PossibilityOfCastling.Replace("k", string.Empty);
-                fen.FenPosStruct.PossibilityOfCastling = fen.FenPosStruct.PossibilityOfCastling.Replace("q", string.Empty);
+                _fen.FenPosStruct.PossibilityOfCastling = _fen.FenPosStruct.PossibilityOfCastling.Replace("k", string.Empty);
+                _fen.FenPosStruct.PossibilityOfCastling = _fen.FenPosStruct.PossibilityOfCastling.Replace("q", string.Empty);
             }
-            if(fen.FenPosStruct.PossibilityOfCastling == string.Empty)
+            if(_fen.FenPosStruct.PossibilityOfCastling == string.Empty)
             {
-            	fen.FenPosStruct.PossibilityOfCastling = "-";
+            	_fen.FenPosStruct.PossibilityOfCastling = "-";
             	return;
             }
             
@@ -345,46 +312,77 @@ namespace ChessEngineCSharp
             {
                 if(start == 63)
                 {
-                    fen.FenPosStruct.PossibilityOfCastling = fen.FenPosStruct.PossibilityOfCastling.Replace("K", string.Empty);
+                    _fen.FenPosStruct.PossibilityOfCastling = _fen.FenPosStruct.PossibilityOfCastling.Replace("K", string.Empty);
                 }
                 if(start == 56)
                 {
-                    fen.FenPosStruct.PossibilityOfCastling = fen.FenPosStruct.PossibilityOfCastling.Replace("Q", string.Empty);
+                    _fen.FenPosStruct.PossibilityOfCastling = _fen.FenPosStruct.PossibilityOfCastling.Replace("Q", string.Empty);
                 }
             }
             if (b[start] == "r")
             {
                 if (start == 7)
                 {
-                    fen.FenPosStruct.PossibilityOfCastling = fen.FenPosStruct.PossibilityOfCastling.Replace("k", string.Empty);
+                    _fen.FenPosStruct.PossibilityOfCastling = _fen.FenPosStruct.PossibilityOfCastling.Replace("k", string.Empty);
                 }
                 if (start == 0)
                 {
-                    fen.FenPosStruct.PossibilityOfCastling = fen.FenPosStruct.PossibilityOfCastling.Replace("q", string.Empty);
+                    _fen.FenPosStruct.PossibilityOfCastling = _fen.FenPosStruct.PossibilityOfCastling.Replace("q", string.Empty);
                 }
             }
             if(b[stop] == "R")
             {
                 if(stop == 63)
                 {
-                    fen.FenPosStruct.PossibilityOfCastling = fen.FenPosStruct.PossibilityOfCastling.Replace("K", string.Empty);
+                    _fen.FenPosStruct.PossibilityOfCastling = _fen.FenPosStruct.PossibilityOfCastling.Replace("K", string.Empty);
                 }
                 if (stop == 56)
                 {
-                    fen.FenPosStruct.PossibilityOfCastling = fen.FenPosStruct.PossibilityOfCastling.Replace("Q", string.Empty);
+                    _fen.FenPosStruct.PossibilityOfCastling = _fen.FenPosStruct.PossibilityOfCastling.Replace("Q", string.Empty);
                 }
             }
             if(b[stop] == "r")
             {
                 if(stop == 7)
                 {
-                    fen.FenPosStruct.PossibilityOfCastling = fen.FenPosStruct.PossibilityOfCastling.Replace("k", string.Empty);
+                    _fen.FenPosStruct.PossibilityOfCastling = _fen.FenPosStruct.PossibilityOfCastling.Replace("k", string.Empty);
                 }
                 if (stop == 0)
                 {
-                    fen.FenPosStruct.PossibilityOfCastling = fen.FenPosStruct.PossibilityOfCastling.Replace("q", string.Empty);
+                    _fen.FenPosStruct.PossibilityOfCastling = _fen.FenPosStruct.PossibilityOfCastling.Replace("q", string.Empty);
                 }
             }
+
+        }
+
+        public string FenChanged(string step)
+        {
+            string elemFieldStart = ColorStep(step).Trim();
+            if (elemFieldStart == "w")
+            {
+                _fen.FenPosStruct.CurrentColorStep = "b";
+            }
+            else
+            {
+                _fen.FenPosStruct.CurrentColorStep = "w";
+                _fen.FenPosStruct.UpcomingMove += 1;
+            }
+
+            string figStart = DetectShape(step, 0, 1),
+            figStop = DetectShape(step, 2, 3);
+
+            if (figStart == "p" || figStart == "P" || TakingFiece(figStart, figStop) == true)
+            {
+                _fen.FenPosStruct.Rule50Step = 0;
+            }
+            else
+            {
+                _fen.FenPosStruct.Rule50Step += 1;
+            }
+
+
+
+            return _fen.FenPosStruct.OutFen(MoveInArray64(step));
 
         }
     }
